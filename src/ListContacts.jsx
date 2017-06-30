@@ -11,11 +11,15 @@ class ListContacts extends Component {
     query: ''
   }
 
+  updateQuery = (query) => {
+    this.setState({query: query.trim()})
+  }
+
   render() {
     return (
      <div className='list-contacts'>
        <div className='list-contacts-top'>
-        <input type='text' className='search-contacts'/>
+        <input type='text' className='search-contacts' placeholder='Serach Contacts' onChange={(event) => this.updateQuery(event.target.value)}/>
        </div>
        <ol className='contact-list'>
         {this.props.contacts.map((contact) =>

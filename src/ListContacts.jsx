@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import escapeRegExp from 'escape-string-regxp';
-import sortBy from 'srot-by';
+import escapeRegExp from 'escape-string-regexp';
+import sortBy from 'sort-by';
 
 class ListContacts extends Component {
   static PropTypes = {
     contacts: PropTypes.array.isRequired,
-    removeContact: PropTypes.func.isRequired
+    removeContact: PropTypes.func.isRequired,
+    addContact: PropTypes.func.isRequired
   }
 
   state = {
@@ -18,13 +19,27 @@ class ListContacts extends Component {
   }
 
   render() {
+    const {contacts, removeContact, addContact} = this.props;
+    const {query} = this.state;
+
+    let showingContacts;
+    if(query){
+      const match = new RegExp(escapeRegExp(query), 'i')
+      showingContacts= contacts.filter((contact) => match.test(contact.name));
+    }else{
+      showingContacts = contacts;
+    }
+
+    showingContacts.sort(sortBy('name'));
+
     return (
      <div className='list-contacts'>
        <div className='list-contacts-top'>
         <input type='text' className='search-contacts' placeholder='Serach Contacts' onChange={(event) => this.updateQuery(event.target.value)}/>
+        <a href='#create' onClick={addContact} className='add-contact'>Add Contact</a>
        </div>
        <ol className='contact-list'>
-        {this.props.contacts.map((contact) =>
+        {showingContacts.map((contact) =>
           <li key={contact.id} className='contact-list-item'>
             <div className='contact-avatar' style={{
               backgroundImage: `url(${contact.avatarURL})`
@@ -33,7 +48,7 @@ class ListContacts extends Component {
               <p>{contact.name}</p>
               <p>{contact.email}</p>
             </div>
-            <button className='contact-remove' onClick={() => this.props.removeContact(contact)}>Remove</button>
+            <button className='contact-remove' onClick={() => removeContact(contact)}>Remove</button>
           </li>
         )}
       </ol>

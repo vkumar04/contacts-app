@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import {Link} from 'react-router-dom';
 import escapeRegExp from 'escape-string-regexp';
 import sortBy from 'sort-by';
 
@@ -7,7 +8,6 @@ class ListContacts extends Component {
   static PropTypes = {
     contacts: PropTypes.array.isRequired,
     removeContact: PropTypes.func.isRequired,
-    addContact: PropTypes.func.isRequired
   }
 
   state = {
@@ -19,7 +19,7 @@ class ListContacts extends Component {
   }
 
   render() {
-    const {contacts, removeContact, addContact} = this.props;
+    const {contacts, removeContact} = this.props;
     const {query} = this.state;
 
     let showingContacts;
@@ -36,7 +36,7 @@ class ListContacts extends Component {
      <div className='list-contacts'>
        <div className='list-contacts-top'>
         <input type='text' className='search-contacts' placeholder='Serach Contacts' onChange={(event) => this.updateQuery(event.target.value)}/>
-        <a href='#create' onClick={addContact} className='add-contact'>Add Contact</a>
+        <Link to='/create' className='add-contact'>Add Contact</Link>
        </div>
        <ol className='contact-list'>
         {showingContacts.map((contact) =>
